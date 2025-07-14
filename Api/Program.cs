@@ -1,3 +1,4 @@
+using Api.Extensions;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddDbContext<AppDbContext>(opts =>
-  opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+builder.Services.AddAppDependencies(builder.Configuration);
 
 var app = builder.Build();
 
@@ -20,10 +18,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+app.UseAppDependencies();
 
-app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();
