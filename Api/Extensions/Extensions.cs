@@ -1,4 +1,5 @@
-﻿using Infrastructure.Context;
+﻿using Api.Hubs;
+using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -63,7 +64,7 @@ namespace Api.Extensions
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+                c.RoutePrefix = "swagger"; // Set Swagger UI at the app's root
             });
             app.UseCors("AllowAnyOrigin");
             app.UseHttpsRedirection();
@@ -71,6 +72,7 @@ namespace Api.Extensions
             app.UseAuthorization();
 
             app.MapHub<SimpleHub>("/simple");
+            app.MapHub<WebRtcHub>("/webrtc");
 
 
             app.MapControllers();

@@ -1,4 +1,5 @@
 using Api.Extensions;
+using Api.Hubs;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseStaticFiles();
 app.UseAppDependencies();
-
 
 app.Run();
