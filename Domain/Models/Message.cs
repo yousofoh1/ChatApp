@@ -1,4 +1,4 @@
-﻿using Domain.Models.Auth;
+﻿using Domain.Models.User;
 using Domain.Models.Shared;
 using System;
 using System.Collections.Generic;
@@ -14,8 +14,8 @@ namespace Domain.Models
         public string Content { get; set; } = string.Empty;
         public int ChannelId { get; set; } 
         public Channel Channel { get; set; } = null!;
-        public int SenderId { get; set; } 
-        public AppUser Sender { get; set; } = null!;
+        public string UserId { get; set; } 
+        public DomainUser User { get; set; } = null!;
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
         public bool IsEdited { get; set; } = false;
     }

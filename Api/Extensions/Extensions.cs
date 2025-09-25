@@ -1,8 +1,20 @@
 ﻿using Api.Hubs;
+using Core.Contracts;
+using Core.Services;
+using Domain.Exceptions;
 using Infrastructure.Context;
+using Infrastructure.Persistence;
+using Infrastructure.Repos;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Security.Authentication;
+using System.Text;
 
 namespace Api.Extensions
 {
@@ -14,15 +26,43 @@ namespace Api.Extensions
                   opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
                 );
 
+            services.AddIdentity<AppUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+
+            services.AddScoped<IUOW, UOW>();
+            services.AddScoped<IServiceManager, ServiceManager>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "yousofo",
+                    ValidAudience = "yousofo_audience",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yousofo-secret-code-yousofo-secret-code"))
+                };
+            });
 
             services.AddCors(o =>
             {
                 o.AddPolicy("AllowAnyOrigin", p => p
-                    //.AllowAnyOrigin()
+                //.AllowAnyOrigin()
                 .AllowAnyHeader()
-            .AllowAnyMethod()
-            .SetIsOriginAllowed(_ => true) // Allow any origin (for dev only)
-            .AllowCredentials()           // This is REQUIRED for SignalR
+                .AllowAnyMethod()
+                .SetIsOriginAllowed(_ => true) // Allow any origin (for dev only)
+                .AllowCredentials()           // This is REQUIRED for SignalR
             );
             });
 
@@ -76,6 +116,41 @@ namespace Api.Extensions
 
 
             app.MapControllers();
+
+            app.UseExceptionHandler(appError =>
+            {
+                appError.Run(async context =>
+                {
+                    context.Response.ContentType = "application/json";
+
+                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+
+                    if (contextFeature != null)
+                    {
+
+                        context.Response.StatusCode = contextFeature.Error switch
+                        {
+                            NotFoundException => StatusCodes.Status404NotFound,
+                            BadRequestException => StatusCodes.Status400BadRequest,
+                            AuthenticationException => StatusCodes.Status401Unauthorized,
+                            _ => StatusCodes.Status500InternalServerError
+                        };
+
+
+                        await context.Response.WriteAsJsonAsync(
+                            new
+                            {
+                                Success = false,
+                                Message = new
+                                {
+                                    Code = context.Response.StatusCode.ToString(),
+                                    contextFeature.Error.Message
+                                }
+                            }
+                        );
+                    }
+                });
+            });
 
 
         }

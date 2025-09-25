@@ -1,0 +1,51 @@
+.custom-scrollbar{
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.17);
+  }
+  &::-webkit-scrollbar {
+    // padding: 1px;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--app-cyan);
+    border-radius: 2px;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #7a7a7a;
+  }
+}
+.main-layout::ng-deep >* > *:not(router-outlet){
+  display: block;
+  padding: 16px;
+  &:nth-child(2){
+    padding-top: 0px;
+  }
+
+}
+
+
+#loading{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  display: flex;
+  opacity: 0;
+  z-index: 999999;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(black, 0.3);
+  transition: 0.3s ease;
+  pointer-events: none;
+  &.active{
+    pointer-events: all;
+    opacity: 1;
+  }
+  svg{
+    width: 100px;
+    height: 100px;
+  }
+}

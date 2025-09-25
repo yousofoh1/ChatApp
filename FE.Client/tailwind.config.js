@@ -1,4 +1,5 @@
-const primeui = require("tailwindcss-primeui");
+// const primeui = require("tailwindcss-primeui");
+import PrimeUI from "tailwindcss-primeui";
 
 module.exports = {
   content: [
@@ -8,6 +9,7 @@ module.exports = {
     extend: {},
   },
   plugins: [
-    primeui(), // ✅ enable the PrimeUI Tailwind plugin
+    // primeui(), // ✅ enable the PrimeUI Tailwind plugin
+    PrimeUI,
   ],
 };

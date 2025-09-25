@@ -15,5 +15,6 @@ namespace Domain.Models
         public Server Server { get; set; } = null!;
         public ICollection<Message> Messages { get; set; } = [];
 
+
     }
 }

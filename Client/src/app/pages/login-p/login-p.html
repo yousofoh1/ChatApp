@@ -1,0 +1,45 @@
+<div class=" lg:min-h-screen flex fle-col items-center justify-center p-6">
+  <div class=" grid lg:grid-cols-2 items-center gap-10 max-w-6xl max-lg:max-w-lg w-full">
+    <div>
+      <h1 class=" lg:text-5xl text-4xl font-bold text-slate-900 dark:text-white !leading-tight">Chat App Login.</h1>
+      <p class=" text-[15px] mt-6 text-slate-600 dark:text-slate-400 leading-relaxed">Login to your account
+        to continue.</p>
+    </div>
+
+    <form [formGroup]="fg" (ngSubmit)="onSubmit()" class=" max-w-md lg:ml-auto w-full">
+      <h2 class=" text-slate-900   dark:text-white text-3xl font-semibold mb-8">Sign in</h2>
+
+      <div class="flex flex-col gap-3">
+          <app-input-wrapper [error]="fg.get('email')?.errors"  [label]="'Username'">
+            <!-- <label class=" text-sm text-slate-900 dark:text-white font-medium mb-2 block">Username</label> -->
+            <input formControlName="email"  type="text"
+              class=" bg-slate-100 dark:bg-slate-800  w-full text-sm text-slate-900 dark:text-white px-4 py-3 rounded-md outline-0 border border-gray-200 focus:border-blue-600 focus:bg-transparent"
+              placeholder="Enter Username" />
+          </app-input-wrapper>
+
+        <app-input-wrapper [error]="fg.get('password')?.errors"  [label]="'Password'">
+          <!-- <label class=" text-sm text-slate-900 dark:text-white font-medium mb-2 block">Password</label> -->
+          <input formControlName="password"  type="password"
+            class=" bg-slate-100 dark:bg-slate-800  w-full text-sm text-slate-900 dark:text-white px-4 py-3 rounded-md outline-0 border border-gray-200 focus:border-blue-600 focus:bg-transparent"
+            placeholder="Enter Password" />
+        </app-input-wrapper>
+        <!-- {isError && <div class=" text-red-600">{error.message}</div>} -->
+      </div>
+
+      <!-- <p>{{ error }}</p> -->
+
+      <div class=" !mt-6">
+        <button type="submit"
+          class=" w-full shadow-xl py-2.5 px-4 text-[15px] font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none cursor-pointer">
+          <!-- isPending ? "Logging in..." : "Login" -->
+          Login
+        </button>
+        <!-- {config.currentGate && (
+          <Link class="text-center block mt-2" href={"/gates/" + config.currentGate.id}>
+            Go back to <span class="font-semibold underline">{config.currentGate.name}</span> Gate
+          </Link>
+        )} -->
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,7 +1,5 @@
 using Api.Extensions;
 using Api.Hubs;
-using Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
