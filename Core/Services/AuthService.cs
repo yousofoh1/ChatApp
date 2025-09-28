@@ -1,10 +1,13 @@
-﻿using Core.Contracts;
-using Core.Contracts.Services;
+﻿using Core.Dtos.Auth;
 using Core.Dtos.Requests;
-using Domain.Contracts;
+using Core.Interfaces;
+using Core.Interfaces.Services;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,19 +15,38 @@ namespace Core.Services
 {
     public class AuthService(IUOW uow) : IAuthService
     {
-        public async Task<LoginRDto> LoginAsync(LoginRequest loginRequest)
+        public async Task<LoginSuccess> LoginAsync(LoginRequest loginRequest)
         {
-            var loginRDto = await uow.AuthRepo.LoginAsync(loginRequest);
-            return loginRDto;
+            var user = await uow.AuthRepo.CheckPasswordAsync(loginRequest.Email, loginRequest.Password);
+
+            var token = GenerateJwtToken(user.Id, user.Email);
+
+            return new LoginSuccess(user, token);
+
         }
-        public string GenerateJwtToken(string userId, string userName)
+        public async Task<LoginSuccess> RegisterAsync(RegisterRequest registerRequest)
         {
-            throw new NotImplementedException();
+            var user = await uow.AuthRepo.RegisterAsync(registerRequest);
+            var token = GenerateJwtToken(user.Id, user.Email);
+            return new LoginSuccess(user, token);
         }
-        public async Task<LoginRDto> RegisterAsync(RegisterRequest registerRequest)
+        public string GenerateJwtToken(string userId, string email)
         {
-            var loginRDto = await uow.AuthRepo.RegisterAsync(registerRequest);
-            return loginRDto;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yousofo-secret-code-yousofo-secret-code"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var descriptor = new SecurityTokenDescriptor
+            {
+                Issuer = "yousofo",
+                Audience = "yousofo_audience",
+                Claims = new Dictionary<string, object> {
+                    {"userId", userId },
+                    {"email", email },
+                },
+                Expires = DateTime.Now.AddMinutes(60),
+                SigningCredentials = creds
+            };
+            return new JsonWebTokenHandler().CreateToken(descriptor);
         }
 
         public string GenerateRefreshToken()
@@ -48,5 +70,7 @@ namespace Core.Services
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

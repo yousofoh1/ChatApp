@@ -1,6 +1,6 @@
-﻿using Core.Contracts;
+﻿using Core.Interfaces;
+using Core.Dtos.Auth;
 using Core.Dtos.Requests;
-using Domain.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,13 +8,11 @@ using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController(IServiceManager manager) : ControllerBase
+    public class AuthController(IServicesUOW manager) : BaseController
     {
         // GET: api/<AuthController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<string>> Get()
         {
             return new string[] { "value1", "value2" };
         }
@@ -28,15 +26,14 @@ namespace Api.Controllers
 
         // POST api/<AuthController>
         [HttpPost("login")]
-        public async Task<ActionResult<LoginRDto>> Login([FromBody] LoginRequest loginRequest)
+        public async Task<LoginSuccess> Login([FromBody] LoginRequest loginRequest)
         {
             var loginRDto = await manager.AuthService.LoginAsync(loginRequest);
-            return Ok(loginRDto);
+            return loginRDto;
         }
 
-        // POST api/<AuthController>
         [HttpPost("register")]
-        public async Task<ActionResult<LoginRDto>> Register([FromBody] RegisterRequest registerRequest)
+        public async Task<ActionResult<LoginSuccess>> Register([FromForm] RegisterRequest registerRequest)
         {
             var loginRDto = await manager.AuthService.RegisterAsync(registerRequest);
             return Ok(loginRDto);

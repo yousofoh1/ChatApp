@@ -1,9 +1,8 @@
 ﻿using Api.Hubs;
-using Core.Contracts;
+using Core.Interfaces;
 using Core.Services;
 using Domain.Exceptions;
-using Infrastructure.Context;
-using Infrastructure.Persistence;
+using Infrastructure.Data;
 using Infrastructure.Repos;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
@@ -35,7 +34,7 @@ namespace Api.Extensions
 
 
             services.AddScoped<IUOW, UOW>();
-            services.AddScoped<IServiceManager, ServiceManager>();
+            services.AddScoped<IServicesUOW, ServiceUOW>();
 
             services.AddAuthentication(options =>
             {

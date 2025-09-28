@@ -1,7 +1,8 @@
-﻿using Core.Contracts.Repos;
+﻿using Core.Dtos.Auth;
 using Core.Dtos.Requests;
-using Domain.Contracts;
-using Infrastructure.Persistence;
+using Core.Interfaces.Repos;
+using Domain.Exceptions;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -16,68 +17,39 @@ namespace Infrastructure.Repos
 {
     public class AuthRepo(UserManager<AppUser> userManager) : IAuthRepo
     {
-        public async Task<LoginRDto> LoginAsync(LoginRequest loginRequest)
+        public async Task<UserRDto> CheckPasswordAsync(string email, string password)
         {
-            // Implement login logic here
-            var user = await userManager.FindByEmailAsync(loginRequest.Email) ?? throw new Exception();
+            var user = await userManager.FindByEmailAsync(email) ?? throw new AppException("Invalid email or password");
 
-            bool isPasswordValid = await userManager.CheckPasswordAsync(user, loginRequest.Password);
-            if (!isPasswordValid) throw new Exception();
+            if (await userManager.CheckPasswordAsync(user, password)) return user.MapToRDto();
+            else throw new AppException("Invalid email or password");
 
-            return new LoginRDto(
-                user.Id,
-                user.UserName ?? "",
-                user.Email ?? "",
-                GenerateJwtToken(user.Id, user.UserName, user.Email)
-            );
         }
 
-        public async Task<LoginRDto> RegisterAsync(RegisterRequest registerRequest)
+        public async Task<UserRDto> RegisterAsync(RegisterRequest registerRequest)
         {
             // Implement registration logic here
             var user = new AppUser
             {
                 UserName = registerRequest.UserName,
-                Email = registerRequest.Email
+                Email = registerRequest.Email,
+                FullName = registerRequest.FullName
             };
 
 
             var result = await userManager.CreateAsync(user, registerRequest.Password);
             if (!result.Succeeded)
             {
-                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                throw new Exception(errors);
+                throw new AppException(result.Errors);
             }
 
 
 
-            return new LoginRDto(
-                user.Id,
-                user.UserName ?? "",
-                user.Email ?? "",
-                GenerateJwtToken(user.Id, user.UserName, user.Email)
-            );
+            return user.MapToRDto();
 
         }
 
-        public string GenerateJwtToken(string userId, string username, string email)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yousofo-secret-code-yousofo-secret-code"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
-                issuer: "yousofo",
-                audience: "yousofo_audience",
-                claims: [
-                    new Claim("userId", userId),
-                    new Claim("username", username),
-                    new Claim("email", email)
-                ],
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds
-            );
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
 
 
         public string GenerateRefreshToken()

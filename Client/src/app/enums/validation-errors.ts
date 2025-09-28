@@ -1,39 +1,38 @@
 import { minDate } from "../validators/date-validators";
 
-export const ValidationErrorsEnum : any = {
-  required(){
-    return 'هذا الحقل مطلوب';
+export const ValidationErrorsEnum: any = {
+  required() {
+    return 'This field is required';
   },
   minlength({ requiredLength, actualLength }: { requiredLength: number; actualLength: number }) {
-    return `يجب تعبئة هذا الحقل بحد اقل ${requiredLength}`;
+    return `The minimum length for this field is ${requiredLength}`;
   },
   maxlength({ requiredLength, actualLength }: { requiredLength: number; actualLength: number }) {
-    return `يجب تعبئة هذا الحقل بحد اقصي ${requiredLength}`;
+    return `The maximum length for this field is ${requiredLength}`;
   },
   minDate({ required, actual }: { required: Date; actual: Date }) {
-
-    return `القيمة المدخلة اقل من الحد الادنى (${required.toISOString().split('T')[0]})`;
+    return `The entered value is less than the minimum allowed (${required.toISOString().split('T')[0]})`;
   },
   maxDate({ required, actual }: { required: Date; actual: Date }) {
-    console.log(required, actual);
-    return `القيمة المدخلة أكبر من الحد الأقصى (${required.toISOString().split('T')[0]})`;
+    return `The entered value is greater than the maximum allowed (${required.toISOString().split('T')[0]})`;
   },
   min({ min, actual }: { min: number; actual: string }) {
-    return `القيمة المدخلة اقل من الحد الادنى (${min})`;
+    return `The entered value is less than the minimum allowed (${min})`;
   },
   max({ max, actual }: { max: number; actual: string }) {
-    return `القيمة المدخلة أكبر من الحد الأقصى (${max})`;
+    return `The entered value is greater than the maximum allowed (${max})`;
   },
-  email(){
-    return 'البريد الإلكتروني غير صالح'
-  } ,
-  pattern(){
-    return 'القيمة غير صالحة'
+  email() {
+    return 'Invalid email address';
   },
-  mask(){
-    return 'القيمة غير صالحة'
+  pattern() {
+    return 'Invalid value';
   },
-  lessThanPurchasePrice(){
-    return 'سعر البيع يجب أن يكون أكبر من سعر الشراء';
+  mask() {
+    return 'Invalid value';
+  },
+  lessThanPurchasePrice() {
+    return 'The selling price must be greater than the purchase price';
   }
 };
+

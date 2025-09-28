@@ -1,6 +1,6 @@
-﻿using Core.Contracts;
-using Core.Contracts.Repos;
-using Infrastructure.Persistence;
+﻿using Core.Interfaces;
+using Core.Interfaces.Repos;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
