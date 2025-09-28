@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Extensions\Middlewares\" />
+    <Folder Include="wwwroot\assets\" />
   </ItemGroup>
 
 </Project>
