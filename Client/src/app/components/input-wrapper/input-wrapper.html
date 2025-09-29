@@ -1,41 +1,5 @@
-<div class="input-wrapper lex flex-col gap-2 relative" [style]="styles()">
-  @if (label() && labelPosition() !== 'inside') {
-  <label
-    class="font-semibold block capitalize mb-1"
-    [attr.style]="_labelStyles"
-    [for]="label()"
-    >{{ label() }}</label
-  >
-  }
-  <div class="relative w-full flex-1">
-    <div
-      class="input-wrapper-inner"
-      [class.border]="labelPosition() == 'inside'"
-    >
-      @if (labelPosition() == 'inside') {
-      <label
-        class="font-semibold capitalize ms-1"
-        [style]="_labelStyles"
-        [for]="label()"
-        >{{ label() }}</label
-      >
-      } 
-      <!--  -->
-      <!-- using template as a storing point because of ng-content...as ng-content is projected once -->
-      <ng-template #projected><ng-content/></ng-template>
-      @if(link() || handler()) {
-      <app-input-extension
-        [icon]="icon()"
-        [link]="link()"
-        [handler]="handler()"
-      >
-        <ng-container *ngTemplateOutlet="projected"></ng-container>
-      </app-input-extension>
-      }@else {
+<ng-content/>
 
-      <ng-container *ngTemplateOutlet="projected"></ng-container>
-      }
-    </div>
-    <p class="error mb-0">{{ getErrorMessage() }}</p>
-  </div>
-</div>
+@if(fc()?.invalid && fc()?.touched){
+  <p-message severity="error" size="small" variant="simple">{{getErrorMessage()}}</p-message>
+}

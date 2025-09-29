@@ -10,18 +10,15 @@
       <h2 class=" text-slate-900   dark:text-white text-3xl font-semibold mb-8">Sign in</h2>
 
       <div class="flex flex-col gap-3">
-          <app-input-wrapper [error]="fg.get('email')?.errors"  [label]="'Username'">
-            <!-- <label class=" text-sm text-slate-900 dark:text-white font-medium mb-2 block">Username</label> -->
-            <input formControlName="email"  type="text"
-              class=" bg-slate-100 dark:bg-slate-800  w-full text-sm text-slate-900 dark:text-white px-4 py-3 rounded-md outline-0 border border-gray-200 focus:border-blue-600 focus:bg-transparent"
-              placeholder="Enter Username" />
-          </app-input-wrapper>
+        <app-input-wrapper [fc]="getFC('email')">
+          <!-- <label class=" text-sm text-slate-900 dark:text-white font-medium mb-2 block">Username</label> -->
+          <input pInputText formControlName="email" type="text" placeholder="Enter Username" />
 
-        <app-input-wrapper [error]="fg.get('password')?.errors"  [label]="'Password'">
+        </app-input-wrapper>
+
+        <app-input-wrapper [fc]="getFC('password')">
           <!-- <label class=" text-sm text-slate-900 dark:text-white font-medium mb-2 block">Password</label> -->
-          <input formControlName="password"  type="password"
-            class=" bg-slate-100 dark:bg-slate-800  w-full text-sm text-slate-900 dark:text-white px-4 py-3 rounded-md outline-0 border border-gray-200 focus:border-blue-600 focus:bg-transparent"
-            placeholder="Enter Password" />
+          <input pInputText formControlName="password" type="password" placeholder="Enter Password" />
         </app-input-wrapper>
         <!-- {isError && <div class=" text-red-600">{error.message}</div>} -->
       </div>

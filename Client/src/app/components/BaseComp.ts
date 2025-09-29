@@ -57,8 +57,12 @@ export abstract class BaseComp {
   //   this.toaster.error(message);
   // }
 
-  getFC(name: string) {
-    return this.fg?.get(name) as FormControl;
+  getFC(name: string,fg:FormGroup=this.fg) {
+    return fg?.get(name) as FormControl;
+  }
+
+  getFCErrors(name: string,fg:FormGroup=this.fg) {
+    return fg?.get(name)?.errors;
   }
 
   generateRandomColor() {

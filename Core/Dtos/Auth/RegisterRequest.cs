@@ -9,7 +9,8 @@ namespace Core.Dtos.Auth
 {
     public record RegisterRequest(
             string UserName,
-            string FullName,
+            string FirstName,
+            string LastName,
             string Email,
             IFormFile Image,
             string Password

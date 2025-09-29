@@ -1,7 +1,8 @@
 ﻿using Core.Dtos.Auth;
 using Core.Dtos.Requests;
 using Core.Interfaces;
-using Core.Interfaces.Services;
+using Core.Interfaces.Services.Entities;
+using Core.Services.Common;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,7 +18,7 @@ namespace Core.Services
     {
         public async Task<LoginSuccess> LoginAsync(LoginRequest loginRequest)
         {
-            var user = await uow.AuthRepo.CheckPasswordAsync(loginRequest.Email, loginRequest.Password);
+            var user = await uow.Auth.CheckPasswordAsync(loginRequest.Email, loginRequest.Password);
 
             var token = GenerateJwtToken(user.Id, user.Email);
 
@@ -26,7 +27,10 @@ namespace Core.Services
         }
         public async Task<LoginSuccess> RegisterAsync(RegisterRequest registerRequest)
         {
-            var user = await uow.AuthRepo.RegisterAsync(registerRequest);
+            var user = await uow.Auth.RegisterAsync(registerRequest);
+            string imageUrl = await FilesService.SaveFileAsync(registerRequest.Image, uow.Host, uow.HttpContext);
+            await uow.Users.UpdateImageAsync(user.Id, imageUrl);
+            user.ImageUrl = imageUrl;
             var token = GenerateJwtToken(user.Id, user.Email);
             return new LoginSuccess(user, token);
         }
@@ -71,6 +75,6 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        
+
     }
 }

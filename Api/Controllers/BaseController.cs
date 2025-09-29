@@ -1,14 +1,13 @@
 ﻿using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public abstract class BaseController : ControllerBase
-    {
-        [FromServices]
-        protected IServicesUOW services { get; set; }
+namespace Api.Controllers;
 
-    }
+[Route("api/[controller]")]
+[ApiController]
+public abstract class BaseController : ControllerBase
+{
+    [FromServices]
+    protected IServicesUOW services { get; set; }
+
 }

@@ -5,18 +5,18 @@ import { HomeP } from './pages/home-p/home-p';
 export const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
     canActivate: [authGuard],
     children: [
       {
         path: '',
+        // pathMatch: 'full',
         component: HomeP,
       },
     ],
   },
   {
-    path: 'auth',
-    canMatch: [authGuard],
+    path: '',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./pages/auth/auth-routes').then((m) => m.default),
   },

@@ -6,24 +6,24 @@ export const authGuard: CanActivateFn = (route: any, state) => {
   // return true;
   const authService = inject(AuthService);
   const router = inject(Router);
-  const isLoggedIn = false;//authService.isLoggedIn;
+  const isLoggedIn = authService.isLoggedIn;
   const path = route?.path ?? '';
-  console.log(path, isLoggedIn);
-  if (path == 'auth') {
-    if (!isLoggedIn) {
+
+  const publicUrls = ['/login', '/register', '/confirm-email'];
+
+  if (isLoggedIn) {
+    if (publicUrls.includes(state.url)) {
+      router.navigateByUrl('/');
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    if (publicUrls.includes(state.url)) {
       return true;
     } else {
-      router.navigateByUrl('/');
+      router.navigateByUrl('/login');
       return false;
     }
   }
-
-  // Block all other routes if NOT logged in
-  if (!isLoggedIn) {
-    router.navigateByUrl('/auth');
-    return false;
-  }
-
-  // Allow everything else if logged in
-  return true;
 };

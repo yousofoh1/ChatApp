@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Core.Services.Common;
 
-public class FilesService
+public static class FilesService
 {
-    public static async Task<string> SaveFile(IFormFile img, IHostEnvironment env, HttpContext http)
+    public static async Task<string> SaveFileAsync(IFormFile img, IHostEnvironment env, IHttpContextAccessor http)
     {
         var path = Path.Combine(env.ContentRootPath, "wwwroot/assets");
 
@@ -20,12 +21,18 @@ public class FilesService
         var fileName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
         var fullPath = Path.Combine(path, fileName);
 
-        using (var stream = new FileStream(fullPath, FileMode.Create))
+        try
         {
-            await img.CopyToAsync(stream);
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await img.CopyToAsync(stream);
+            }
+        }catch (Exception ex)
+        {
+            throw new AppException("File upload failed: " + ex.Message);
         }
 
         //full path
-        return http.Request.Host + "/Assets/" + fileName;
+        return http.HttpContext.Request.Host + "/Assets/" + fileName;
     }
 }

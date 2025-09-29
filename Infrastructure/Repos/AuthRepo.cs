@@ -33,14 +33,15 @@ namespace Infrastructure.Repos
             {
                 UserName = registerRequest.UserName,
                 Email = registerRequest.Email,
-                FullName = registerRequest.FullName
+                FirstName = registerRequest.FirstName,
+                LastName = registerRequest.LastName
             };
 
 
             var result = await userManager.CreateAsync(user, registerRequest.Password);
             if (!result.Succeeded)
             {
-                throw new AppException(result.Errors);
+                throw new IdentityException(result.Errors);
             }
 
 
@@ -51,7 +52,7 @@ namespace Infrastructure.Repos
 
 
 
-
+        
         public string GenerateRefreshToken()
         {
             // Implement refresh token generation logic here

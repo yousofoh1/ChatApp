@@ -5,7 +5,7 @@ import { ConfirmEmailP } from './confirm-email-p/confirm-email-p';
 
 export default [
   {
-    path: '',
+    path: 'login',
     component: LoginP,
   },
   {

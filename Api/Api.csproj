@@ -32,7 +32,8 @@
 
   <ItemGroup>
     <Folder Include="Extensions\Middlewares\" />
-    <Folder Include="wwwroot\assets\" />
+    <Folder Include="wwwroot\**\*"  CopyToOutputDirectory="Always" />
   </ItemGroup>
+
 
 </Project>

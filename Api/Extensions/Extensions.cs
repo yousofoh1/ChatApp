@@ -32,7 +32,6 @@ namespace Api.Extensions
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-
             services.AddScoped<IUOW, UOW>();
             services.AddScoped<IServicesUOW, ServiceUOW>();
 
@@ -140,10 +139,11 @@ namespace Api.Extensions
                             new
                             {
                                 Success = false,
-                                Message = new
+                                Code = context.Response.StatusCode.ToString(),
+                                Errors = contextFeature.Error switch
                                 {
-                                    Code = context.Response.StatusCode.ToString(),
-                                    contextFeature.Error.Message
+                                    IdentityException => ((IdentityException)contextFeature.Error).Errors,
+                                    _ => contextFeature.Error.Message
                                 }
                             }
                         );

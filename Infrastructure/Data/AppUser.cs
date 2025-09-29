@@ -12,7 +12,8 @@ namespace Infrastructure.Data;
 
 public class AppUser : IdentityUser
 {
-    public string? FullName { get; set; } = string.Empty;
+    public string? FirstName { get; set; } = string.Empty;
+    public string? LastName { get; set; } = string.Empty;
     public string? ImageUrl { get; set; } = string.Empty;
 
     public UserRDto MapToRDto()
@@ -21,7 +22,8 @@ public class AppUser : IdentityUser
         {
             Id = Id,
             Email = Email,
-            FullName = FullName,
+            FirstName = FirstName,
+            LastName = LastName,
             UserName = UserName,
             ImageUrl = ImageUrl
         };

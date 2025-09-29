@@ -13,15 +13,13 @@ public class AuthController(IServicesUOW manager) : BaseController
     [HttpPost("login")]
     public async Task<LoginSuccess> Login([FromBody] LoginRequest loginRequest)
     {
-        var loginRDto = await manager.AuthService.LoginAsync(loginRequest);
-        return loginRDto;
+        return await manager.Auth.LoginAsync(loginRequest);
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<LoginSuccess>> Register([FromForm] RegisterRequest registerRequest)
+    public async Task<LoginSuccess> Register([FromForm] RegisterRequest registerRequest)
     {
-        var loginRDto = await manager.AuthService.RegisterAsync(registerRequest);
-        return Ok(loginRDto);
+        return await manager.Auth.RegisterAsync(registerRequest);
     }
 
 }

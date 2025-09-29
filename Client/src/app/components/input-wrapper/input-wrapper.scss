@@ -1,98 +1,17 @@
-app-input-wrapper {
-  &.errorr {
-    .input-wrapper {
-      border: 1px solid red !important;
-    }
-  }
-}
-.input-wrapper {
-  // height: 100%;
-  input,
-  select,
-  .input,
-  textarea {
-    //
-    border: 1px solid #cecece;
-    background-color: #fbfbfb;
-    border-radius: 4px;
-    padding: 2px 8px;
-    width: 100%;
-    height: 100%;
-    //
-    flex: 1;
-    font-size: 14px;
-    &:focus {
-      outline: none;
-    }
-  }
-  .border {
-    border: 1px solid #cecece;
-    background-color: #fbfbfb;
-    border-radius: 4px;
-    padding: 2px 8px;
-    width: 100%;
-    // height: 100%;
-    display: flex;
-    gap: 4px;
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &:has(.ng-invalid.ng-touched)::ng-deep {
     input,
-    select,
-    textarea {
-      border: none;
-      background-color: #fbfbfb;
-      border-radius: inherit;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  .input-wrapper-inner {
-    &:has(select) {
-      @extend .border;
-      padding: 0;
-      .input-extension-wrapper,
-      select {
-        padding-inline-start: 3px;
-        border: none !important;
-      }
-      select {
-        // margin-left: 5px;
+    textarea,
+    select {
+      border-color: red;
+      color: red;
+      &::placeholder {
+        color: red;
       }
     }
-    width: 100%;
-    // overflow: hidden;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    &:has(.auto-height) {
-      height: auto;
-    }
-    &:has(.ng-invalid.ng-dirty) + .error,
-  &:has(.ng-invalid.ng-touched) + .error {
-    opacity: 1 !important;
   }
-  }
-  input::placeholder {
-    color: #aeaeae;
-    font-size: 14px;
-  }
-  label {
-    height: fit-content;
-  }
-
-  .textarea,
-  textarea {
-    resize: vertical;
-    min-height: 124px;
-  }
-
-  
-}
-.error {
-  color: red;
-  opacity: 0;
-  font-size: 12px;
-  position: absolute;
-  top: 100%;
-  right: 0;
 }

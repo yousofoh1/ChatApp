@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces.Services;
+using Core.Interfaces.Services.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Core.Interfaces
 {
     public interface IServicesUOW
     {
-        IAuthService AuthService { get; }
+        IAuthService Auth { get; }
+        IUsersService Users { get; }
     }
 }

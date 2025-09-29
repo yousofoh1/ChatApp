@@ -1,51 +1,28 @@
-import { Component, inject, input, OnInit, signal, ViewEncapsulation } from '@angular/core';
-import { ValidationErrors } from '@angular/forms';
+import { Component, input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ValidationErrorsEnum } from '../../enums/validation-errors';
-import { Router } from '@angular/router';
-import { InputExtension } from './input-extension/input-extension';
 import { NgTemplateOutlet } from '@angular/common';
-export type InputType = 'text' | 'number' | 'password' | 'email' | 'tel' | 'date';
+import { MessageModule } from 'primeng/message';
+
 
 @Component({
   selector: 'app-input-wrapper',
-  imports: [InputExtension, NgTemplateOutlet],
-  encapsulation: ViewEncapsulation.None,
+  imports: [NgTemplateOutlet,MessageModule],
   templateUrl: './input-wrapper.html',
   styleUrl: './input-wrapper.scss',
 })
-export class InputWrapper implements OnInit {
-  //errors from FormControl
-  error = input<ValidationErrors | null | undefined>(null);
-  type = input<InputType>('text');
-  label = input<string | null>(null);
-  styles = input<string>('');
-  placeholder = input<string>('');
-  labelStyles = input<string>('');
-  labelPosition = input<'left' | 'top' | 'right' | 'inside'>('top');
+export class InputWrapper {
+  fc = input<FormControl | null >(null);
 
-  _labelStyles = '';
-  ngOnInit() {
-    this._labelStyles = `color: var(--app-cyan); font-size: 14px;${this.labelStyles()}`;
-  }
 
   getErrorMessage() {
     let error = '';
-     if (this.error()) {
-      let key = Object.keys(this.error()!)[0];
-      error = ValidationErrorsEnum[key](this.error()![key]);
+     if (this.fc()?.errors) {
+      let key = Object.keys(this.fc()?.errors!)[0];
+      error = ValidationErrorsEnum[key](this.fc()?.errors![key]);
     }
-
     return error;
   }
 
-  //
-  //
-  //
-  //for input extension
-  //الازرار
-  //
-  icon = input<'refresh' | 'search' | 'add'>('add');
-  link = input<string>('');
-  handler = input<(() => void) | null>(null);
-  router = inject(Router);
+  
 }

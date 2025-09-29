@@ -6,14 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Exceptions;
 
-public class AppException: Exception
+public class IdentityException:AppException
 {
-    public AppException()
+    public readonly object Errors=default!;
+    public IdentityException(object errors)
     {
-        
-    }
-    public AppException(string message): base(message)
-    {
-
+        this.Errors = errors;
     }
 }
