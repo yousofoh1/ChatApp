@@ -1,0 +1,23 @@
+<div class="flex flex-col gap-2 h-full">
+  <div
+    class="text-white text-lg p-3 sticky top-0 bg-bg-light leading-none pb-2 border-b border-b-white/20 flex justify-end gap-2 [&>button]:cursor-pointer [&>button]:border [&>button]:border-white/20 [&>button]:rounded [&>button]:p-1">
+    <button>
+      <i class="pi pi-video"></i>
+    </button>
+    <button>
+      <i class="pi pi-phone"></i>
+    </button>
+  </div>
+  <div class="flex flex-col gap-1 p-3 h-full overflow-auto">
+    @for (message of messageHistory; track $index) {
+    <div class="flex" [class.flex-row-reverse]="!message.incoming">
+      <img src="image source" class="img-fluid rounded-top" alt="" />
+      <div class="bg-slate-300 py-2 px-4 rounded-b-2xl" [class.rounded-e-2xl]="message.incoming"
+        [class.rounded-s-2xl]="!message.incoming">
+        <p>{{message.message}}</p>
+        <p class="w-fit text-xs text-slate-400 ms-auto">{{message.date | date}}</p>
+      </div>
+    </div>
+    }
+  </div>
+</div>

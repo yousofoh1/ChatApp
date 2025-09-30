@@ -9,15 +9,14 @@ import { InputWrapper } from '../../../components/input-wrapper/input-wrapper';
   selector: 'app-login-p',
   imports: [ReactiveFormsModule, InputWrapper, InputTextModule],
   templateUrl: './login-p.html',
-  styleUrl: './login-p.css',
+  styleUrl: './login-p.scss',
 })
 export class LoginP extends BaseComp {
-  authS = inject(AuthService);
   generalError: string | null = null;
 
   override initialForm = {
-    email: ['', { validators: [Validators.required, Validators.email] }],
-    password: ['', { validators: [Validators.required] }],
+    email: ['yousofoh1@gmail.com', { validators: [Validators.required, Validators.email] }],
+    password: ['P@ssw0rd', { validators: [Validators.required] }],
   };
 
   constructor() {

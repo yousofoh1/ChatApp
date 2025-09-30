@@ -1,10 +1,12 @@
-<!-- <app-header /> -->
-<main class="d-flex position-relative" style="height: calc(100vh - 65px)">
-  <!-- <app-sidebar /> -->
-  <div class="flex-grow-1 main-layout d-flex flex-column h-100 custom-scrollbar overflow-y-auto">
-    <router-outlet />
-  </div>
-</main>
+<div class="bg-bg-dark h-full flex flex-col ">
+  <app-header class="block h-[56px]"/>
+  <main class="flex relative pe-4 pb-4 h-[calc(100vh-56px)]">
+    <app-sidebar />
+    <div class="flex-1 rounded-2xl bg-bg-light main-layout flex flex-col h-full custom-scrollbar overflow-y-auto">
+      <router-outlet />
+    </div>
+  </main>
+</div>
 <div id="loading" [class.active]="layoutS.isLoading()">
   <!-- <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <radialGradient id="a9" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)">

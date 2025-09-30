@@ -1,11 +1,31 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-import { ElementRef, inject, Injectable, PipeTransform, signal } from '@angular/core';
+import {
+  ElementRef,
+  inject,
+  Injectable,
+  PipeTransform,
+  signal,
+} from '@angular/core';
 
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 
 import { DecimalPipe } from '@angular/common';
-import { catchError, debounceTime, delay, distinctUntilChanged, finalize, skip, switchMap, tap } from 'rxjs/operators';
-import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  catchError,
+  debounceTime,
+  delay,
+  distinctUntilChanged,
+  finalize,
+  skip,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
+import {
+  HttpClient,
+  HttpContext,
+  HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { IResponse } from './base-models';
 // import { DeleteService } from './delete/delete-service';
@@ -19,7 +39,12 @@ interface IPostOptions {
   headers?: HttpHeaders | Record<string, string | string[]>;
   context?: HttpContext;
   observe?: 'body';
-  params?: HttpParams | Record<string, string | number | boolean | ReadonlyArray<string | number | boolean>>;
+  params?:
+    | HttpParams
+    | Record<
+        string,
+        string | number | boolean | ReadonlyArray<string | number | boolean>
+      >;
   reportProgress?: boolean;
   responseType?: 'json';
   withCredentials?: boolean;
@@ -61,8 +86,8 @@ export default class BaseService<T extends IItem> {
   };
 
   _routes = {
-    add: 'manage',
     get: 'listAsync',
+    add: 'manage',
     getById: 'getById',
     search: 'search',
     delete: 'delete',
@@ -77,7 +102,11 @@ export default class BaseService<T extends IItem> {
   httpClient = inject(HttpClient);
   // deleteService = inject(DeleteService);
   // toastService = inject(ToastrService);
-  constructor(route: string, refreshRoutes: string[] = [], private router: Router = inject(Router)) {
+  constructor(
+    route: string,
+    refreshRoutes: string[] = [],
+    private router: Router = inject(Router)
+  ) {
     this.route = route;
     this.start();
     this.router.events.subscribe((event) => {
@@ -133,7 +162,10 @@ export default class BaseService<T extends IItem> {
             return this._search().pipe(
               catchError((error) => {
                 this.searchedItems.set([]); // handle gracefully
-                return of({ paginationInfo: { totalRowsCount: 0, totalPagesCount: 0 }, rows: [] } as IResponse<T>); // allow stream to continue
+                return of({
+                  paginationInfo: { totalRowsCount: 0, totalPagesCount: 0 },
+                  rows: [],
+                } as IResponse<T>); // allow stream to continue
               })
             );
           } else {
@@ -162,18 +194,23 @@ export default class BaseService<T extends IItem> {
         error: (error) => {},
       });
   }
+  getAll() {
+    return this.httpClient.get<any>(this.url);
+  }
   getById(id: any) {
     return this.httpClient.get<any>(this.url + this.routes.getById + '/' + id);
   }
   update(data: any, options: IPostOptions = {} as IPostOptions) {
-    return this.httpClient.post<IResponse<T>>(this.url + 'Manage', data, options).pipe(
-      tap({
-        next: () => {
-          this.getPage(1).subscribe();
-          // this.search('');
-        },
-      })
-    );
+    return this.httpClient
+      .post<IResponse<T>>(this.url + 'Manage', data, options)
+      .pipe(
+        tap({
+          next: () => {
+            this.getPage(1).subscribe();
+            // this.search('');
+          },
+        })
+      );
   }
   add<AddType>(data: any) {
     return this.httpClient.post<any>(this.url + this.routes.add, data).pipe(
@@ -221,7 +258,10 @@ export default class BaseService<T extends IItem> {
         })
       );
   }
-  getPage(id: number = this._state.pageIndex, size: number = this._state.pageSize) {
+  getPage(
+    id: number = this._state.pageIndex,
+    size: number = this._state.pageSize
+  ) {
     this._state.pageIndex = id;
     this._state.pageSize = size;
     if (this._state.searchTerm && this._state.searchTerm != '') {
@@ -286,11 +326,15 @@ export default class BaseService<T extends IItem> {
       },
     };
 
-    return this.httpClient.post<IResponse<T>>(this.url + this._routes.search, dto, {
-      headers: {
-        'skip-error': 'true',
-      },
-    });
+    return this.httpClient.post<IResponse<T>>(
+      this.url + this._routes.search,
+      dto,
+      {
+        headers: {
+          'skip-error': 'true',
+        },
+      }
+    );
   }
   search(term?: string) {
     if (term == undefined || term == null) {
@@ -302,7 +346,11 @@ export default class BaseService<T extends IItem> {
     if (this._state.searchTerm != term) {
       this._state.pageIndex = 1;
     }
-    this.patchState({ searchTerm: term, pageIndex: this._state.pageIndex, pageSize: 10 });
+    this.patchState({
+      searchTerm: term,
+      pageIndex: this._state.pageIndex,
+      pageSize: 10,
+    });
     this.search$.next(term);
     return this.search$;
   }

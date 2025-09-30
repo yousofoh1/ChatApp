@@ -1,0 +1,24 @@
+<header class="flex justify-between w-full px-4 py-3">
+  <a routerLink="/" >
+    <img src="/yousofo.png" class="h-8 invert-100" alt="">
+  </a>
+  <div class="flex gap-2 items-center w-fit">
+    <button
+      class="text-white flex items-center justify-center cursor-pointer p-1 border border-white/30 h-full rounded relative">
+      <i class="pi pi-bell"></i>
+      <span
+        class="absolute bottom-0 aspect-square left-1/2 -translate-x-1/2 font-bold bg-red-600 text-[10px] text-white px-0.5 rounded-full">7</span>
+    </button>
+
+    <div class="h-full flex justify-center items-center">
+      <p-menu #menu [model]="accountMenu" [popup]="true" />
+      <button
+        class="flex justify-center items-center text-white cursor-pointer p-1 border relative h-full  border-white/30 rounded"
+        (click)="menu.toggle($event)">
+        <p class="px-2 text-sm text-gray-400 max-w-[100px] whitespace-nowrap overflow-hidden text-ellipsis">
+          {{user()?.firstName}}</p>
+        <i class="pi pi-user text-xl! leading-none!"></i>
+      </button>
+    </div>
+  </div>
+</header>

@@ -16,4 +16,4 @@ export default [
     path: 'confirm-email',
     component: ConfirmEmailP,
   },
-] as Routes;
+] satisfies Routes;

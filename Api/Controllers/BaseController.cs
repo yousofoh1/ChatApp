@@ -7,7 +7,5 @@ namespace Api.Controllers;
 [ApiController]
 public abstract class BaseController : ControllerBase
 {
-    [FromServices]
-    protected IServicesUOW services { get; set; }
 
 }

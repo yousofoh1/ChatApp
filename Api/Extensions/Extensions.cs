@@ -109,7 +109,7 @@ namespace Api.Extensions
 
             app.UseAuthorization();
 
-            app.MapHub<SimpleHub>("/simple");
+            app.MapHub<SimpleHub>("/chat");
             app.MapHub<WebRtcHub>("/webrtc");
 
 

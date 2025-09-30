@@ -16,14 +16,14 @@
     background: #7a7a7a;
   }
 }
-.main-layout::ng-deep >* > *:not(router-outlet){
-  display: block;
-  padding: 16px;
-  &:nth-child(2){
-    padding-top: 0px;
-  }
+// .main-layout::ng-deep >* > *:not(router-outlet){
+//   display: block;
+//   padding: 16px;
+//   &:nth-child(2){
+//     padding-top: 0px;
+//   }
 
-}
+// }
 
 
 #loading{

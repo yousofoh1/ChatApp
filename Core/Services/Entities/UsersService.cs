@@ -33,7 +33,8 @@ public class UsersService(IUOW uow) : IUsersService
 
     public Task<IEnumerable<UserRDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var users = uow.Users.GetAllAsync(cancellationToken);   
+        return users;
     }
 
     public Task DeleteAsync(string id, CancellationToken cancellationToken = default)

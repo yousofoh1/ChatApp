@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Extensions\Middlewares\" />
-    <Folder Include="wwwroot\**\*"  CopyToOutputDirectory="Always" />
+    <Folder Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 

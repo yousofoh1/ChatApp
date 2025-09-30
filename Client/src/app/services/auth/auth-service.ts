@@ -6,20 +6,16 @@ import { tap } from 'rxjs';
 
 export interface IUser {
   id: string;
-  fullName: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phoneNumber: any;
-  password: any;
-  imageUrl: any;
-  targetType: string;
-  addressCity: any;
-  liveAddress: any;
-  isActive: boolean;
-  image: any;
+  imageUrl: string;
 }
 
 function getUser() {
-  if (localStorage.getItem('user')) return JSON.parse(localStorage.getItem('user')!) as IUser;
+  if (localStorage.getItem('user'))
+    return JSON.parse(localStorage.getItem('user')!) as IUser;
   return null;
 }
 
@@ -47,16 +43,20 @@ export class AuthService {
 
   mailForOtp = '';
   login(value: any) {
-    return this.httpClient.post(`${this.rootUrl}/auth/login`, value, { headers: { 'skip-error': 'true' } }).pipe(
-      tap({
-        next: (res: any) => {
-          this.isLoggedIn = true;
-          this.router.navigateByUrl('');
-          // localStorage.setItem('token', res.token);
-          // localStorage.setItem('userId', res.userId);
-        },
+    return this.httpClient
+      .post(`${this.rootUrl}/auth/login`, value, {
+        headers: { 'skip-error': 'true' },
       })
-    );
+      .pipe(
+        tap({
+          next: (res: any) => {
+            this.isLoggedIn = true;
+            this.router.navigateByUrl('');
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('user', JSON.stringify(res.user));
+          },
+        })
+      );
   }
 
   get userId() {
@@ -97,11 +97,10 @@ export class AuthService {
 
   logout() {
     this.isLoggedIn = false;
-    this.router.navigateByUrl('/auth');
     this.user.set(null);
-    localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('userId');
+    localStorage.removeItem('token');
+    this.router.navigateByUrl('/auth/login');
     this.currentStage.set(AuthStagesEnum.login);
   }
 }

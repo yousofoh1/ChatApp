@@ -5,6 +5,7 @@ import { inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 // import { LayoutService } from '../services/layout/layout-service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../services/auth/auth-service';
 // import { MainSettings } from '../services/main-settings/main-settings';
 
 export abstract class BaseComp {
@@ -18,6 +19,7 @@ export abstract class BaseComp {
   fb = inject(FormBuilder);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  authS=inject(AuthService)
   //
 
   fg!: FormGroup;
