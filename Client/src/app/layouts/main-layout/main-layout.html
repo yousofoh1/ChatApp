@@ -2,7 +2,7 @@
   <app-header class="block h-[56px]"/>
   <main class="flex relative pe-4 pb-4 h-[calc(100vh-56px)]">
     <app-sidebar />
-    <div class="flex-1 rounded-2xl bg-bg-light main-layout flex flex-col h-full custom-scrollbar overflow-y-auto">
+    <div class="flex-1 rounded-2xl bg-bg-light main-layout flex flex-col [&>*:not(router-outlet)]:h-full h-full custom-scrollbar overflow-y-auto">
       <router-outlet />
     </div>
   </main>

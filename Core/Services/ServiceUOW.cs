@@ -16,7 +16,10 @@ namespace Core.Services
             = new(() => new AuthService(uow));
         private Lazy<IUsersService> _users
             = new(() => new UsersService(uow));
+        private Lazy<IMessagesService> _messages
+            = new(() => new MessagesService(uow));
         public IAuthService Auth => _auth.Value;
         public IUsersService Users => _users.Value;
+        public IMessagesService Messages => _messages.Value;
     }
 }

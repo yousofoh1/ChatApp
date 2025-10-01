@@ -1,5 +1,6 @@
 ﻿using Core.Dtos.Auth;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Api.Controllers;
 
-
+[Authorize]
 public class UsersController(IServicesUOW services) : BaseController
 {
     [HttpGet]

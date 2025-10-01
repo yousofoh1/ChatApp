@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -18,10 +18,6 @@ namespace Infrastructure.Data.EntityConfigs
                 .HasForeignKey(c => c.ServerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(c => c.Messages)
-                .WithOne(m => m.Channel)
-                .HasForeignKey(m => m.ChannelId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

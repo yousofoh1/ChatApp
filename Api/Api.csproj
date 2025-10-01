@@ -31,8 +31,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\Middlewares\" />
-    <Folder Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
+    <Compile Remove="Extensions\Middlewares\**" />
+    <Content Remove="Extensions\Middlewares\**" />
+    <EmbeddedResource Remove="Extensions\Middlewares\**" />
+    <None Remove="Extensions\Middlewares\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\" />
   </ItemGroup>
 
 

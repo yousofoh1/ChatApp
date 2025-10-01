@@ -12,5 +12,6 @@ namespace Core.Interfaces
     {
         IAuthService Auth { get; }
         IUsersService Users { get; }
+        IMessagesService Messages { get; }
     }
 }

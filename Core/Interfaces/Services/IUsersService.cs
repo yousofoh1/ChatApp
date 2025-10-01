@@ -13,6 +13,7 @@ public interface IUsersService
     Task DeleteAsync(string id, CancellationToken cancellationToken = default);
     Task<IEnumerable<UserRDto>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<UserRDto> GetByIdAsync(string id, CancellationToken cancellationToken = default);
+    Task<UserRDto> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default);
     Task<UserRDto> UpdateAsync(UserUDto userUDto, CancellationToken cancellationToken = default);
     Task UpdateImageAsync(string userId, IFormFile imageUrl);
 }

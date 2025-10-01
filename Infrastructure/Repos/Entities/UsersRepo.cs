@@ -1,16 +1,9 @@
 ﻿using Core.Dtos.Auth;
 using Core.Interfaces.Repos.Entities;
 using Domain.Exceptions;
-using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repos.Entities;
 
@@ -68,5 +61,11 @@ public class UsersRepo(AppDbContext context, UserManager<AppUser> userManager) :
         {
             throw new IdentityException(result.Errors);
         }
+    }
+
+    public async Task<UserRDto> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+    {
+        var user = await userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName, cancellationToken) ?? throw new AppException("User not found");
+        return user.MapToRDto();
     }
 }

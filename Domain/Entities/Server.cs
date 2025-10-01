@@ -1,12 +1,12 @@
-﻿using Domain.Models.User;
-using Domain.Models.Shared;
+﻿using Domain.Entities.User;
+using Domain.Entities.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Entities
 {
     public class Server:BaseEntity
     {

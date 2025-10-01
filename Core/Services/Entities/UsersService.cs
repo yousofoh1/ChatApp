@@ -18,6 +18,11 @@ public class UsersService(IUOW uow) : IUsersService
         throw new NotImplementedException();
     }
 
+    public async Task<UserRDto> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+    {
+        return await uow.Users.GetByUserNameAsync(userName, cancellationToken);
+    }
+
     public async Task<UserRDto> UpdateAsync(UserUDto userUDto, CancellationToken cancellationToken = default)
     {
         return await uow.Users.UpdateAsync(userUDto, cancellationToken);
@@ -26,14 +31,14 @@ public class UsersService(IUOW uow) : IUsersService
     public async Task UpdateImageAsync(string userId, IFormFile image)
     {
         string imageUrl = await FilesService.SaveFileAsync(image, uow.Host, uow.HttpContext);
-        await uow.Users.UpdateImageAsync(userId, imageUrl); 
+        await uow.Users.UpdateImageAsync(userId, imageUrl);
 
     }
-    
+
 
     public Task<IEnumerable<UserRDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var users = uow.Users.GetAllAsync(cancellationToken);   
+        var users = uow.Users.GetAllAsync(cancellationToken);
         return users;
     }
 
@@ -41,5 +46,6 @@ public class UsersService(IUOW uow) : IUsersService
     {
         throw new NotImplementedException();
     }
+
 
 }

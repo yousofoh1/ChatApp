@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models.Shared
+namespace Domain.Entities.Shared
 {
     public abstract class BaseEntity
     {

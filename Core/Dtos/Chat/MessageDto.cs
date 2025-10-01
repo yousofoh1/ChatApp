@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 namespace Core.Dtos.Chat;
 
 public record MessageDto(
-        string SenderId,
-        string ReceiverImageUrl,
-        string ReceiverId,
+        string SenderUserName,
+        string SenderImageUrl,
+        string SenderFullName,
+        string ReceiverUserName,
         string Text
     );

@@ -1,4 +1,4 @@
-<aside class="px-2 py-4 pe-0 flex flex-col">
+<aside class="px-2 py-4 pe-0 flex flex-col min-w-[150px]">
   @for (user of users; track $index) {
 
   <a class="p-2 pe-4 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis text-gray-400 " [routerLink]="'/'+user.userName"

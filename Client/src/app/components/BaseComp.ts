@@ -6,6 +6,8 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 // import { LayoutService } from '../services/layout/layout-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth/auth-service';
+import { LayoutService } from '../services/layout/layout-service';
+import { SignalRS } from '../services/signalr/signal-r-s';
 // import { MainSettings } from '../services/main-settings/main-settings';
 
 export abstract class BaseComp {
@@ -14,12 +16,13 @@ export abstract class BaseComp {
   // settingsS=inject(MainSettings);
   // toaster = inject(ToastrService);
   // PageModesEnum = PageModesEnum;
-  // layoutService = inject(LayoutService);
-  initialForm:any;
+  layoutS = inject(LayoutService);
+  initialForm: any;
   fb = inject(FormBuilder);
   router = inject(Router);
   route = inject(ActivatedRoute);
-  authS=inject(AuthService)
+  authS = inject(AuthService);
+  signalRS = inject(SignalRS);
   //
 
   fg!: FormGroup;
@@ -27,9 +30,7 @@ export abstract class BaseComp {
   /**
    *
    */
-  constructor() {
-    
-  }
+  constructor() {}
   InitializeForm() {
     this.fg = this.fb.group(this.initialForm);
   }
@@ -59,11 +60,11 @@ export abstract class BaseComp {
   //   this.toaster.error(message);
   // }
 
-  getFC(name: string,fg:FormGroup=this.fg) {
+  getFC(name: string, fg: FormGroup = this.fg) {
     return fg?.get(name) as FormControl;
   }
 
-  getFCErrors(name: string,fg:FormGroup=this.fg) {
+  getFCErrors(name: string, fg: FormGroup = this.fg) {
     return fg?.get(name)?.errors;
   }
 

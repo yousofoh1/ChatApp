@@ -1,6 +1,7 @@
 <div class="flex flex-col gap-2 h-full">
+
   <div
-    class="text-white text-lg p-3 sticky top-0 bg-bg-light leading-none pb-2 border-b border-b-white/20 flex justify-end gap-2 [&>button]:cursor-pointer [&>button]:border [&>button]:border-white/20 [&>button]:rounded [&>button]:p-1">
+    class=" text-white text-lg p-3 sticky top-0 bg-bg-light leading-none pb-2 border-b border-b-white/20 flex justify-end gap-2 [&>button]:cursor-pointer [&>button]:border [&>button]:border-white/20 [&>button]:rounded [&>button]:p-1">
     <button>
       <i class="pi pi-video"></i>
     </button>
@@ -8,7 +9,8 @@
       <i class="pi pi-phone"></i>
     </button>
   </div>
-  <div class="flex flex-col gap-1 p-3 h-full overflow-auto">
+
+  <div class="flex flex-col gap-1 p-3 overflow-auto  flex-1 h-[calc(100%-180px)]">
     @for (message of messageHistory; track $index) {
     <div class="flex" [class.flex-row-reverse]="!message.incoming">
       <img src="image source" class="img-fluid rounded-top" alt="" />
@@ -20,4 +22,11 @@
     </div>
     }
   </div>
+
+  <p-inputgroup>
+    <input (keydown)="sendMessage($event,messageInput)" pInputText #messageInput placeholder="Keyword" class="rounded-t-none! p-3! rounded-bl-2xl!" />
+    <p-button (onClick)="sendMessage( $event,messageInput)" label="Search" styleClass="rounded-s-none!  py-3! px-6! rounded-t-none!" />
+  </p-inputgroup>
+
+
 </div>

@@ -1,5 +1,5 @@
-﻿using Domain.Models;
-using Domain.Models.User;
+﻿using Domain.Entities;
+using Domain.Entities.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -19,8 +19,8 @@ namespace Infrastructure.Data.EntityConfigs
             builder.HasKey(u => u.Id);
             builder.HasMany(u => u.OwnedServers).WithOne(s => s.Owner).HasForeignKey(u => u.OwnerId).OnDelete(DeleteBehavior.Restrict);
             builder.HasMany(u => u.Servers).WithMany(s => s.Users);
-            builder.HasMany(u => u.Messages).WithOne(m => m.User).HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
-
+            builder.HasMany(u => u.Messages).WithOne(m => m.Sender).HasForeignKey(m => m.SenderId).OnDelete(DeleteBehavior.Restrict);
+            //builder.HasMany(u => u.Messages).WithOne(m => m.Receiver).HasForeignKey(m => m.ReceiverId).OnDelete(DeleteBehavior.Restrict);
             builder.HasMany(u => u.Friends).WithMany(f => f.FriendOf).UsingEntity(j => j.ToTable("UserFriend"));
 
 

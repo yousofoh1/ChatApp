@@ -11,6 +11,7 @@ namespace Core.Interfaces
     {
         IAuthRepo Auth { get; }
         IUsersRepo Users { get; }
+        IMessagesRepo Messages { get; }
         IHostEnvironment Host { get; }
         IHttpContextAccessor HttpContext { get; }
     }

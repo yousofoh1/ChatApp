@@ -15,7 +15,7 @@ export class LoginP extends BaseComp {
   generalError: string | null = null;
 
   override initialForm = {
-    email: ['yousofoh1@gmail.com', { validators: [Validators.required, Validators.email] }],
+    email: ['yousofoh2@gmail.com', { validators: [Validators.required, Validators.email] }],
     password: ['P@ssw0rd', { validators: [Validators.required] }],
   };
 

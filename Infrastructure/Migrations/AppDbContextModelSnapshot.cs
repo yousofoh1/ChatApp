@@ -22,7 +22,7 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Models.Channel", b =>
+            modelBuilder.Entity("Domain.Entities.Channel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Channels");
                 });
 
-            modelBuilder.Entity("Domain.Models.Message", b =>
+            modelBuilder.Entity("Domain.Entities.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ChannelId")
+                    b.Property<int?>("ChannelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -62,23 +62,32 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsEdited")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime2");
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("ReceiverId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ChannelId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("Domain.Models.Server", b =>
+            modelBuilder.Entity("Domain.Entities.Server", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +118,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Servers");
                 });
 
-            modelBuilder.Entity("Domain.Models.User.DomainUser", b =>
+            modelBuilder.Entity("Domain.Entities.User.DomainUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -374,9 +383,9 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Channel", b =>
+            modelBuilder.Entity("Domain.Entities.Channel", b =>
                 {
-                    b.HasOne("Domain.Models.Server", "Server")
+                    b.HasOne("Domain.Entities.Server", "Server")
                         .WithMany("Channels")
                         .HasForeignKey("ServerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -385,28 +394,32 @@ namespace Infrastructure.Migrations
                     b.Navigation("Server");
                 });
 
-            modelBuilder.Entity("Domain.Models.Message", b =>
+            modelBuilder.Entity("Domain.Entities.Message", b =>
                 {
-                    b.HasOne("Domain.Models.Channel", "Channel")
+                    b.HasOne("Domain.Entities.Channel", null)
                         .WithMany("Messages")
-                        .HasForeignKey("ChannelId")
+                        .HasForeignKey("ChannelId");
+
+                    b.HasOne("Domain.Entities.User.DomainUser", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.User.DomainUser", "User")
+                    b.HasOne("Domain.Entities.User.DomainUser", "Sender")
                         .WithMany("Messages")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Channel");
+                    b.Navigation("Receiver");
 
-                    b.Navigation("User");
+                    b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("Domain.Models.Server", b =>
+            modelBuilder.Entity("Domain.Entities.Server", b =>
                 {
-                    b.HasOne("Domain.Models.User.DomainUser", "Owner")
+                    b.HasOne("Domain.Entities.User.DomainUser", "Owner")
                         .WithMany("OwnedServers")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -415,9 +428,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Domain.Models.User.DomainUser", b =>
+            modelBuilder.Entity("Domain.Entities.User.DomainUser", b =>
                 {
-                    b.OwnsMany("Domain.Models.User.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("Domain.Entities.User.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -456,13 +469,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DomainUserDomainUser", b =>
                 {
-                    b.HasOne("Domain.Models.User.DomainUser", null)
+                    b.HasOne("Domain.Entities.User.DomainUser", null)
                         .WithMany()
                         .HasForeignKey("FriendOfId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.User.DomainUser", null)
+                    b.HasOne("Domain.Entities.User.DomainUser", null)
                         .WithMany()
                         .HasForeignKey("FriendsId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -471,13 +484,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DomainUserServer", b =>
                 {
-                    b.HasOne("Domain.Models.Server", null)
+                    b.HasOne("Domain.Entities.Server", null)
                         .WithMany()
                         .HasForeignKey("ServersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.User.DomainUser", null)
+                    b.HasOne("Domain.Entities.User.DomainUser", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -535,17 +548,17 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Models.Channel", b =>
+            modelBuilder.Entity("Domain.Entities.Channel", b =>
                 {
                     b.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("Domain.Models.Server", b =>
+            modelBuilder.Entity("Domain.Entities.Server", b =>
                 {
                     b.Navigation("Channels");
                 });
 
-            modelBuilder.Entity("Domain.Models.User.DomainUser", b =>
+            modelBuilder.Entity("Domain.Entities.User.DomainUser", b =>
                 {
                     b.Navigation("Messages");
 

@@ -13,7 +13,7 @@ namespace Core.Interfaces.Services.Entities
         Task<LoginSuccess> LoginAsync(LoginRequest loginRequest);
         string HashPassword(string password);
         bool VerifyPassword(string hashedPassword, string providedPassword);
-        string GenerateJwtToken(string userId, string userName);
+        string GenerateJwtToken(string userId, string imageUrl, string fullName, string userName);
         string GenerateRefreshToken();
         Task<bool> ValidateRefreshToken(string userId, string refreshToken);
         Task<LoginSuccess> RegisterAsync(RegisterRequest registerRequest);

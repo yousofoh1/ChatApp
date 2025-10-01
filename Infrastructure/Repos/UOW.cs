@@ -22,8 +22,10 @@ namespace Infrastructure.Repos
 
         private readonly Lazy<AuthRepo> _auth = new(() => new(userManager));
         private readonly Lazy<UsersRepo> _users = new(() => new(context, userManager));
+        private readonly Lazy<MessagesRepo> _messages = new(() => new(context, userManager));
 
         public IAuthRepo Auth => _auth.Value;
         public IUsersRepo Users => _users.Value;
+        public IMessagesRepo Messages => _messages.Value;
     }
 }

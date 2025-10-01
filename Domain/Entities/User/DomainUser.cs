@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models.User
+namespace Domain.Entities.User
 {
     public class DomainUser
     {

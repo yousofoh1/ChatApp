@@ -20,7 +20,7 @@ namespace Core.Services
         {
             var user = await uow.Auth.CheckPasswordAsync(loginRequest.Email, loginRequest.Password);
 
-            var token = GenerateJwtToken(user.Id, user.Email);
+            var token = GenerateJwtToken(user.Id, user.ImageUrl, user.FirstName + " " + user.LastName, user.UserName);
 
             return new LoginSuccess(user, token);
 
@@ -31,10 +31,10 @@ namespace Core.Services
             string imageUrl = await FilesService.SaveFileAsync(registerRequest.Image, uow.Host, uow.HttpContext);
             await uow.Users.UpdateImageAsync(user.Id, imageUrl);
             user.ImageUrl = imageUrl;
-            var token = GenerateJwtToken(user.Id, user.Email);
+            var token = GenerateJwtToken(user.Id, imageUrl, user.FirstName + " " + user.LastName, user.UserName);
             return new LoginSuccess(user, token);
         }
-        public string GenerateJwtToken(string userId, string email)
+        public string GenerateJwtToken(string userId, string imageUrl, string fullName, string userName)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yousofo-secret-code-yousofo-secret-code"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -45,7 +45,9 @@ namespace Core.Services
                 Audience = "yousofo_audience",
                 Claims = new Dictionary<string, object> {
                     {"userId", userId },
-                    {"email", email },
+                    {"userName", userName },
+                    {"fullnName", fullName },
+                    {"imageUrl", imageUrl },
                 },
                 Expires = DateTime.Now.AddMinutes(60),
                 SigningCredentials = creds
