@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <video id="remoteVideo" autoplay playsinline></video>
+    <video id="localVideo" autoplay playsinline muted></video>
+
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@6.0.0/dist/browser/signalr.js"></script>
+
+    <script>
+
+        async function run() {
+            // =========================
+            // CONFIG
+            // =========================
+            const hubUrl = location.protocol.startsWith("https")
+                ? "https://192.168.1.51:7166/webrtc"
+                : "http://192.168.1.51:7166/webrtc";
+
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl(hubUrl)
+                .configureLogging(signalR.LogLevel.Information)
+                .withAutomaticReconnect()
+                .build();
+
+            try {
+                await connection.start();
+                console.log("Connected:", connection.connectionId);
+            } catch (err) {
+                console.error("SignalR connection failed:", err);
+                return;
+            }
+
+            // =========================
+            // STATE
+            // =========================
+            let myRole = null;              // "broadcaster" or "viewer"
+            let broadcasterId = null;
+            let localStream = null;
+
+            const pcs = {};                 // broadcaster: viewerId -> RTCPeerConnection
+            const pendingCandidates = {};   // peerId -> queued ICE
+            let viewerPc = null;            // viewer: RTCPeerConnection
+            let viewerPending = [];         // viewer ICE queue
+
+            const iceConfig = {
+                iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+            };
+
+            // =========================
+            // SIGNALR EVENT HANDLERS
+            // =========================
+            connection.on("YouAreBroadcaster", async () => {
+                console.log("Role: Broadcaster");
+                myRole = "broadcaster";
+                await setupLocalMedia();
+            });
+
+            connection.on("ViewerJoined", async (viewerId) => {
+                if (myRole !== "broadcaster") return;
+                if (pcs[viewerId]) return;
+                console.log("Viewer joined:", viewerId);
+                await createOfferForViewer(viewerId);
+            });
+
+            connection.on("BroadcasterIs", (id) => {
+                console.log("Role: Viewer, broadcaster is:", id);
+                myRole = "viewer";
+                broadcasterId = id;
+                setupLocalMedia();
+            });
+
+            connection.on("BroadcasterDisconnected", () => {
+                console.log("Stream ended");
+                document.getElementById("remoteVideo").srcObject = null;
+            });
+
+            connection.on("ReceiveOffer", async (sdp, fromId) => {
+                if (myRole !== "viewer") return;
+                broadcasterId = fromId;
+
+                viewerPc = new RTCPeerConnection(iceConfig);
+
+                if (!localStream) await setupLocalMedia();
+                localStream.getTracks().forEach(track => viewerPc.addTrack(track, localStream));
+
+                attachRemoteTrackHandler(viewerPc);
+
+                viewerPc.onicecandidate = e => {
+                    if (e.candidate) {
+                        connection.invoke("SendIceCandidate", broadcasterId, JSON.stringify(e.candidate));
+                    }
+                };
+
+                await viewerPc.setRemoteDescription(new RTCSessionDescription({ type: "offer", sdp }));
+                await flushPendingCandidates("broadcaster", viewerPc);
+
+                if (viewerPending.length) {
+                    for (const cj of viewerPending) {
+                        await safeAddIceCandidate("broadcaster", viewerPc, cj);
+                    }
+                    viewerPending = [];
+                }
+
+                const answer = await viewerPc.createAnswer();
+                await viewerPc.setLocalDescription(answer);
+                await connection.invoke("SendAnswer", broadcasterId, answer.sdp);
+            });
+
+            connection.on("ReceiveAnswer", async (sdp, fromId) => {
+                if (myRole !== "broadcaster") return;
+                const pc = pcs[fromId];
+                if (!pc) return;
+                await pc.setRemoteDescription(new RTCSessionDescription({ type: "answer", sdp }));
+                await flushPendingCandidates(fromId, pc);
+            });
+
+            connection.on("ReceiveIceCandidate", async (candidateJson, fromId) => {
+                if (myRole === "broadcaster") {
+                    const pc = pcs[fromId];
+                    if (!pc) return;
+                    await safeAddIceCandidate(fromId, pc, candidateJson);
+                } else if (myRole === "viewer") {
+                    if (!viewerPc) {
+                        viewerPending.push(candidateJson);
+                        return;
+                    }
+                    await safeAddIceCandidate("broadcaster", viewerPc, candidateJson);
+                }
+            });
+
+            // =========================
+            // FUNCTIONS
+            // =========================
+            async function setupLocalMedia() {
+                try {
+                    if (!localStream) {
+                        console.log("Requesting local media...");
+                        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                    }
+
+                    const localVideoEl = document.getElementById("localVideo");
+                    const remoteVideoEl = document.getElementById("remoteVideo");
+
+                    localVideoEl.srcObject = localStream;
+                    localVideoEl.muted = true;
+                    localVideoEl.playsInline = true;
+                    await localVideoEl.play().catch(() => { });
+
+                    if (myRole === "broadcaster") {
+                        remoteVideoEl.srcObject = localStream;
+                        remoteVideoEl.playsInline = true;
+                        await remoteVideoEl.play().catch(() => { });
+                    }
+                } catch (err) {
+                    console.error("getUserMedia failed:", err);
+                }
+            }
+
+            function attachRemoteTrackHandler(pc) {
+                pc.ontrack = e => {
+                    console.log("Remote track received:", e.streams);
+                    if (myRole === "viewer") {
+                        const remoteVideo = document.getElementById("remoteVideo");
+                        remoteVideo.srcObject = e.streams[0];
+                        remoteVideo.playsInline = true;
+                        remoteVideo.play().catch(() => { });
+                    }
+                };
+            }
+
+            async function createOfferForViewer(viewerId) {
+                const pc = new RTCPeerConnection(iceConfig);
+                pcs[viewerId] = pc;
+
+                localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
+                pc.onicecandidate = e => {
+                    if (e.candidate) {
+                        connection.invoke("SendIceCandidate", viewerId, JSON.stringify(e.candidate));
+                    }
+                };
+
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                await connection.invoke("SendOffer", viewerId, offer.sdp);
+            }
+
+            // =========================
+            // ICE Candidate Helpers
+            // =========================
+            async function safeAddIceCandidate(peerId, pc, candidateJson) {
+                const candidate = new RTCIceCandidate(JSON.parse(candidateJson));
+                if (!pc.remoteDescription || !pc.remoteDescription.type) {
+                    if (!pendingCandidates[peerId]) pendingCandidates[peerId] = [];
+                    pendingCandidates[peerId].push(candidate);
+                    console.log(`Queued ICE for ${peerId}`);
+                    return;
+                }
+                try {
+                    await pc.addIceCandidate(candidate);
+                } catch (err) {
+                    console.error(`addIceCandidate failed for ${peerId}`, err);
+                }
+            }
+
+            async function flushPendingCandidates(peerId, pc) {
+                const q = pendingCandidates[peerId];
+                if (!q || !q.length) return;
+                console.log(`Flushing ${q.length} ICE for ${peerId}`);
+                for (const cand of q) {
+                    try {
+                        await pc.addIceCandidate(cand);
+                    } catch (err) {
+                        console.error(`Flush ICE failed for ${peerId}`, err);
+                    }
+                }
+                pendingCandidates[peerId] = [];
+            }
+        }
+
+
+        run();
+    </script>
+
+</body>
+</html>
