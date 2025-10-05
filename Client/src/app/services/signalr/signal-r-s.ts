@@ -21,12 +21,13 @@ export class SignalRS {
   constructor() {}
 
   public startConnection = () => {
+    
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.rootUrl + '/chat', {
         accessTokenFactory: () => localStorage.getItem('token') || '',
       }) // URL of the SignalR hub
       .build();
-
+    
     this.hubConnection
       .start()
       .then(() => {
@@ -36,6 +37,7 @@ export class SignalRS {
       .catch((err) =>
         console.log('Error establishing SignalR connection: ' + err)
       );
+    
   };
 
   private addMessageListener = () => {

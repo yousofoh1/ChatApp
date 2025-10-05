@@ -82,9 +82,5 @@ public class SimpleHub(IServicesUOW services) : Hub
         await base.OnDisconnectedAsync(exception);
     }
 
-    
-
-    
-
 
 }

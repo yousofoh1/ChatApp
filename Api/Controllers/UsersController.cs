@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Api.Controllers;
 
-[Authorize]
+//[Authorize]
 public class UsersController(IServicesUOW services) : BaseController
 {
     [HttpGet]
@@ -21,11 +21,6 @@ public class UsersController(IServicesUOW services) : BaseController
     public string Get(int id)
     {
         return "value";
-    }
-
-    [HttpPost]
-    public void Post([FromBody] string value)
-    {
     }
 
     [HttpPut("{id}")]
