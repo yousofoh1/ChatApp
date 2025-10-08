@@ -5,13 +5,15 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Attributes;
+
 
 namespace Domain.Entities.User
 {
     public class DomainUser
     {
         public string Id { get; set; }
-        [StringLength(50)]
+        [StringLength(50),Searchable]
         public string FirstName { get; set; } = "";
         [StringLength(50)]
         public string LastName { get; set; } = "";

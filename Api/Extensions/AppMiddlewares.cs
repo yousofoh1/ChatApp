@@ -12,15 +12,17 @@ public static class AppMiddlewares
         app.MapOpenApi();
 
         app.UseSwagger();
-        app.UseSwaggerUI(c =>
+        app.UseSwaggerUI(opts =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            c.RoutePrefix = "swagger"; // Set Swagger UI at the app's root
+            opts.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            //add auth
+
+            opts.RoutePrefix = "swagger"; // Set Swagger UI at the app's root
         });
         app.UseCors("AllowAnyOrigin");
         //app.Use((context, next) =>
         //{   
-        //    context.Response.Headers.Remove("Access-Control-Allow-Origin");
+        //    context.Response.Headers.Remove("Access-ControlAllow-Origin");
         //    Console.WriteLine(context.Request.Headers.Referer);
         //    context.Response.Headers.Add("Access-Control-Allow-Origin", $"localhost:4200");
         //    return next(context);

@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,17 @@ public class MessagesRepo(AppDbContext context, UserManager<AppUser> userManager
         return await context.Messages.Where(m => m.ReceiverId == receiverId && m.IsRead == false)
             .OrderBy(m => m.SentAt)
             .ToListAsync(cancellationToken);
+    }
+
+
+    public async Task MarkAllAsReadAsync(string receiverId, CancellationToken cancellationToken = default)
+    {
+        var receiverIdParam = new SqlParameter("@receiverId", receiverId);
+
+        await context.Database.ExecuteSqlRawAsync(
+            "exec markAllAsReadAsync @receiverId",
+            receiverIdParam);
+
     }
 
 

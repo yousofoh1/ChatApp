@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { LoginP } from './login-p/login-p';
-import { RegisterP } from './register-p/register-p';
-import { ConfirmEmailP } from './confirm-email-p/confirm-email-p';
+import { LoginP } from './pages/login-p/login-p';
+import { RegisterP } from './pages/register-p/register-p';
+import { ConfirmEmailP } from './pages/confirm-email-p/confirm-email-p';
 
 export default [
   {

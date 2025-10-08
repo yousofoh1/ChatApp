@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { UsersS } from '../../services/users/users-s';
-import { IUser } from '../../services/auth/auth-service';
+import { UsersS } from '../../features/auth/services/users-s';
+import { IUser } from '../../features/auth/services/auth-s';
 import { BaseComp } from '../BaseComp';
 
 @Component({

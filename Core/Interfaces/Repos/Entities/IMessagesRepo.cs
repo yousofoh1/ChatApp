@@ -12,4 +12,5 @@ public interface IMessagesRepo
     Task<Message> CreateAsync(Message message, CancellationToken cancellationToken = default);
     Task<IEnumerable<Message>> GetAllAsync(string userId, CancellationToken cancellationToken = default);
     Task<IEnumerable<Message>> GetAllUnreadAsync(string receiverId, CancellationToken cancellationToken = default);
+    Task MarkAllAsReadAsync(string receiverId, CancellationToken cancellationToken = default);
 }

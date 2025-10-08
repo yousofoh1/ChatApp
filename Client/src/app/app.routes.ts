@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
-import { HomeP } from './pages/home-p/home-p';
+import { HomeP } from './features/general/home-p/home-p';
 import { MainLayout } from './layouts/main-layout/main-layout';
-import { MessagingP } from './pages/messaging-p/messaging-p';
+import { MessagingP } from './features/messaging/messaging-p/messaging-p';
 
 export const routes: Routes = [
   {
@@ -25,7 +25,7 @@ export const routes: Routes = [
     path: 'auth',
     canActivate: [authGuard],
     loadChildren: () =>
-      import('./pages/auth/auth-routes').then((m) => m.default),
+      import('./features/auth/routes').then((m) => m.default),
   },
   {
     path: '**',

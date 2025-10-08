@@ -17,6 +17,11 @@ public class MessagesService(IUOW uOW) : IMessagesService
         return await uOW.Messages.GetAllAsync(userId, cancellationToken);
     }
 
+    public async Task MarkAllAsReadAsync(string receiverId, CancellationToken cancellationToken = default)
+    {
+        await uOW.Messages.MarkAllAsReadAsync(receiverId, cancellationToken);
+    }
+
     public async Task<IEnumerable<Message>> GetAllUnreadAsync(string receiverId, CancellationToken cancellationToken = default)
     {
         return await uOW.Messages.GetAllUnreadAsync(receiverId, cancellationToken);

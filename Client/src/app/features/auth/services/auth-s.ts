@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { tap } from 'rxjs';
 
 export interface IUser {
@@ -28,7 +28,7 @@ export enum AuthStagesEnum {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthS {
   isLoggedIn = localStorage.getItem('token') ? true : false;
   currentStage = signal(AuthStagesEnum.login);
   httpClient = inject(HttpClient);

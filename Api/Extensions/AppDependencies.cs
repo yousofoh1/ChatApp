@@ -77,7 +77,37 @@ public static class AppDependencies
         );
         });
 
-        services.AddSwagger();
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
+
+            // JWT Bearer Auth definition
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Enter 'Bearer' [space] and then your JWT token.\nExample: Bearer eyJhbGciOiJIUzI1NiIs..."
+            });
+
+            // Apply Bearer token globally
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
 
         services.AddSignalR();
     }

@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { BaseComp } from '../../../components/BaseComp';
+import { BaseComp } from '../../../../components/BaseComp';
 import { InputTextModule } from 'primeng/inputtext';
-import { AuthService } from '../../../services/auth/auth-service';
-import { InputWrapper } from '../../../components/input-wrapper/input-wrapper';
+import { AuthS } from '../../services/auth-s';
+import { InputWrapper } from '../../../../components/input-wrapper/input-wrapper';
 
 @Component({
   selector: 'app-login-p',
@@ -15,7 +15,10 @@ export class LoginP extends BaseComp {
   generalError: string | null = null;
 
   override initialForm = {
-    email: ['yousofoh2@gmail.com', { validators: [Validators.required, Validators.email] }],
+    email: [
+      'yousofoh2@gmail.com',
+      { validators: [Validators.required, Validators.email] },
+    ],
     password: ['P@ssw0rd', { validators: [Validators.required] }],
   };
 

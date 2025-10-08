@@ -5,8 +5,8 @@ import { inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 // import { LayoutService } from '../services/layout/layout-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../services/auth/auth-service';
-import { LayoutService } from '../services/layout/layout-service';
+import { AuthS } from '../features/auth/services/auth-s';
+import { LayoutS } from '../layouts/layout-s';
 import { SignalRS } from '../services/signalr/signal-r-s';
 // import { MainSettings } from '../services/main-settings/main-settings';
 
@@ -16,12 +16,12 @@ export abstract class BaseComp {
   // settingsS=inject(MainSettings);
   // toaster = inject(ToastrService);
   // PageModesEnum = PageModesEnum;
-  layoutS = inject(LayoutService);
+  layoutS = inject(LayoutS);
   initialForm: any;
   fb = inject(FormBuilder);
   router = inject(Router);
   route = inject(ActivatedRoute);
-  authS = inject(AuthService);
+  authS = inject(AuthS);
   signalRS = inject(SignalRS);
   //
 

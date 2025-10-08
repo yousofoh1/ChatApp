@@ -2,18 +2,18 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { inject } from '@angular/core';
-import { AuthService } from '../services/auth/auth-service';
+import { AuthS } from '../features/auth/services/auth-s';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   let cloned;
-  let authService = inject(AuthService);
+  let authS = inject(AuthS);
 
   if (req.url.includes('api')) {
-    cloned = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + authService.token) });
+    cloned = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + authS.token) });
     return next(cloned).pipe(
       catchError((err) => {
         if (err.status === 401) {
-          authService.logout();
+          authS.logout();
         }
         return throwError(() => err);
       })
@@ -23,7 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err) => {
       if (err.status === 401) {
-        authService.logout();
+        authS.logout();
       }
       return throwError(() => err);
     })

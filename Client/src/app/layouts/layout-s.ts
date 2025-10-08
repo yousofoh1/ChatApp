@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class LayoutService {
+export class LayoutS {
   navOpen = signal(true);
   language = signal(localStorage.getItem('lang') || 'en');
   isLoading  = signal(false);

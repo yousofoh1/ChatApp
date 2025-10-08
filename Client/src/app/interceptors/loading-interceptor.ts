@@ -1,10 +1,10 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { delay, finalize, of } from 'rxjs';
-import { LayoutService } from '../services/layout/layout-service';
+import { LayoutS } from '../layouts/layout-s';
 
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
-  const layoutS = inject(LayoutService);
+  const layoutS = inject(LayoutS);
   layoutS.start();
 
   // const t = of(null).pipe(delay(1000));

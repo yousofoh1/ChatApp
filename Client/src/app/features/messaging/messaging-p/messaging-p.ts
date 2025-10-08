@@ -3,8 +3,8 @@ import { Component, input } from '@angular/core';
 import { InputText } from 'primeng/inputtext';
 import { InputGroup } from 'primeng/inputgroup';
 import { Button } from 'primeng/button';
-import { BaseComp } from '../../components/BaseComp';
-import { IChatMessage } from '../../services/signalr/signal-r-s';
+import { BaseComp } from '../../../components/BaseComp';
+import { IChatMessage } from '../../../services/signalr/signal-r-s';
 import { Validators } from '@angular/forms';
 
 @Component({
